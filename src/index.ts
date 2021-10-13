@@ -1,7 +1,7 @@
 import { ref, useContext, useFetch } from '@nuxtjs/composition-api'
 import { PayloadObject, PartialResponseObject, ResultObject, PredicatesObject } from './types'
 
-export const usePirsmicApi = (payload: PayloadObject) => {
+export const usePrismicApi = (payload: PayloadObject) => {
   const { $prismic } = useContext()
 
   const generatePaginationObjectFromResponse = (response: PartialResponseObject) => {
