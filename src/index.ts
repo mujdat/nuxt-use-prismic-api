@@ -52,27 +52,8 @@ export interface PayloadObject {
   docType?: string
 }
 
-export interface PredicatesObject {
-  at: any
-  any: any
-  not: any
-  in: any
-}
-
 export const usePrismicApi = (payload: PayloadObject) => {
   const { $prismic } = useContext()
-
-  const generatePaginationObjectFromResponse = (response: PartialResponseObject) => {
-    return {
-      page: response.page,
-      results_per_page: response.results_per_page,
-      results_size: response.results_size,
-      total_results_size: response.total_results_size,
-      total_pages: response.total_pages,
-      next_page: response.next_page,
-      prev_page: response.prev_page
-    }
-  }
 
   if (payload && payload.method === 'query') {
     const dynamicQueryDataObject = ref<any>({
@@ -87,6 +68,17 @@ export const usePrismicApi = (payload: PayloadObject) => {
     const dynamicQueryErrorStateObject = ref<any>({
       [`${payload.data}Error`] : {}
     })
+    const generatePaginationObjectFromResponse = (response: PartialResponseObject) => {
+      return {
+        page: response.page,
+        results_per_page: response.results_per_page,
+        results_size: response.results_size,
+        total_results_size: response.total_results_size,
+        total_pages: response.total_pages,
+        next_page: response.next_page,
+        prev_page: response.prev_page
+      }
+    }
     const getPredicatesQuery = (predicates: string | undefined) => {
       if (predicates && predicates === 'at') {
         return $prismic.api.query($prismic.predicates.at(`${payload?.query?.path}`, payload?.query?.queryValue), payload?.query?.options)
@@ -148,6 +140,35 @@ export const usePrismicApi = (payload: PayloadObject) => {
       ...paginationFunctionObject.value,
       ...dynamicQueryLoadingStateObject.value,
       ...dynamicQueryErrorStateObject.value
+    }
+  } else if (payload && payload.method === 'getByUID') {
+    const dynamicGetByUIDDataObject = ref<any>({
+      [`${payload.data}`] : {}
+    })
+    const dynamicGetByUIDLoadingStateObject = ref<any>({
+      [`${payload.data}Loading`] : {}
+    })
+    const dynamicGetByUIDErrorStateObject = ref<any>({
+      [`${payload.data}Error`] : {}
+    })
+    useFetch(async () => {
+      try {
+        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(true)
+        const response = await $prismic.api.getByUID(payload.docType, payload.uid)
+        if (response) {
+          dynamicGetByUIDDataObject.value[`${payload.data}`].data = response
+        }
+        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
+      } catch (error: any) {
+        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
+        dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].status = error.status
+      }
+
+    })
+    return {
+      ...dynamicGetByUIDDataObject.value,
+      ...dynamicGetByUIDLoadingStateObject.value,
+      ...dynamicGetByUIDLoadingStateObject.value
     }
   }
 }
