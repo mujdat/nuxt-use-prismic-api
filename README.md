@@ -1,5 +1,5 @@
 # Nuxt usePrismicApi
-A handy little composable to query data from any Prismic API on your Nuxt application. This composable allows you to query data from any Prismic API and abstracts the process a little further to make it easy to retreive and display data on your Nuxt application. It works for both SSR and Static Nuxt applications (v2.15.7 or above, excluding Nuxt 3) that are using `@nuxtjs/composition-api` and `@nuxtjs/prismic` modules.
+A handy little composable to query data from any Prismic API on your Nuxt application. This composable allows you to query data from any Prismic API and abstracts the process a little further to make it easy to retreive and display data on your Nuxt application. It works for both SSR and Static Nuxt applications up to v2.15.7 that are using `@nuxtjs/composition-api` and `@nuxtjs/prismic` modules.
 
 ## Installation
 Make sure you have [@nuxtjs/composition-api](https://composition-api.nuxtjs.org) and [@nuxtjs/prismic](https://prismic.nuxtjs.org/installation) modules installed. After that, install this package via npm or Yarn with the following commands.
