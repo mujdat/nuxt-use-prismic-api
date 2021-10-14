@@ -60,7 +60,7 @@ export const usePrismicApi = (payload: PayloadObject) => {
       [`${payload.data}`] : []
     })
     const dynamicQueryPaginationObject = ref<any>({
-      [`${payload.data}PaginationObject`] : {}
+      [`${payload.data}Pagination`] : {}
     })
     const dynamicQueryLoadingStateObject = ref<any>({
       [`${payload.data}Loading`] : {}
@@ -95,7 +95,7 @@ export const usePrismicApi = (payload: PayloadObject) => {
       dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(true)
       const response = await getPredicatesQuery(payload.query?.predicates)
         if (response) {
-          dynamicQueryPaginationObject.value[`${payload.data}PaginationObject`].data = {...generatePaginationObjectFromResponse(response)}
+          dynamicQueryPaginationObject.value[`${payload.data}Pagination`].data = {...generatePaginationObjectFromResponse(response)}
           if(response.results && response.results.length) {
             response.results.forEach((result: ResultObject) => {
             dynamicQueryDataObject.value[`${payload.data}`].push(result)
@@ -108,8 +108,8 @@ export const usePrismicApi = (payload: PayloadObject) => {
         dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
       }
     })
-    const paginationFunctionObject = ref<any>({
-      [`${payload.data}PaginationFunction`]: (url: string) => {
+    const refetchDataFunctionObject = ref<any>({
+      [`${payload.data}RefetchData`]: (url: string) => {
         try {
           dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(true)
           if (url) {
@@ -121,8 +121,8 @@ export const usePrismicApi = (payload: PayloadObject) => {
                 data.results.forEach((result: ResultObject) => {
                   dynamicQueryDataObject.value[`${payload.data}`].push(result)
                 })
-                dynamicQueryPaginationObject.value[`${payload.data}PaginationObject`].data = {}
-                dynamicQueryPaginationObject.value[`${payload.data}PaginationObject`].data = {...generatePaginationObjectFromResponse(data)}
+                dynamicQueryPaginationObject.value[`${payload.data}Pagination`].data = {}
+                dynamicQueryPaginationObject.value[`${payload.data}Pagination`].data = {...generatePaginationObjectFromResponse(data)}
               }
             })
             dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
@@ -137,7 +137,7 @@ export const usePrismicApi = (payload: PayloadObject) => {
     return {
       ...dynamicQueryDataObject.value,
       ...dynamicQueryPaginationObject.value,
-      ...paginationFunctionObject.value,
+      ...refetchDataFunctionObject.value,
       ...dynamicQueryLoadingStateObject.value,
       ...dynamicQueryErrorStateObject.value
     }
@@ -163,12 +163,11 @@ export const usePrismicApi = (payload: PayloadObject) => {
         dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
         dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].status = error.status
       }
-
     })
     return {
       ...dynamicGetByUIDDataObject.value,
       ...dynamicGetByUIDLoadingStateObject.value,
-      ...dynamicGetByUIDLoadingStateObject.value
+      ...dynamicGetByUIDErrorStateObject.value
     }
   }
 }
