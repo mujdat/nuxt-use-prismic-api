@@ -31,14 +31,14 @@ export interface QueryObject {
   path: string
   queryValue?: string | string[] | number
   options?: {
-    after: number
-    fetch: string | string[]
-    fetchLinks: string
-    page: number
-    pageSize: number
-    orderings: string
-    lang: string
-    ref: string
+    after?: number
+    fetch?: string | string[]
+    fetchLinks?: string
+    page?: number
+    pageSize?: number
+    orderings?: string
+    lang?: string
+    ref?: string
   }
 }
 
