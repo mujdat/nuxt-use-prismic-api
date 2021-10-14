@@ -32,7 +32,7 @@ The composable exports a function called `usePrismicApi()` and it takes a payloa
 
 The payload object may look like this for a given query:
 ```ts
-}
+{
   data: string,
   method: string,
   query: {

@@ -44,7 +44,7 @@ export interface QueryObject {
 
 export interface PayloadObject {
   data: string
-  method: 'query' | 'getByID' | 'getByIDs' | 'getByUID'
+  method: 'query' | 'getByUID'
   query?: QueryObject
   id?: string
   ids?: string[]
