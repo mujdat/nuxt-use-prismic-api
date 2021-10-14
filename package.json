@@ -1,6 +1,6 @@
 {
   "name": "nuxt-use-prismic-api",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "A handy composable to query data from the Prismic API on your Nuxt application.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
