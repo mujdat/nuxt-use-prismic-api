@@ -1,5 +1,5 @@
-# Nuxt usePrismicApi
-A handy little composable to query data from any Prismic API on your Nuxt application. This composable allows you to query data from any Prismic API and abstracts the process a little further to make it easy to retreive and display data on your Nuxt application. It works for both SSR and Static Nuxt applications up to v2.15.7 that are using `@nuxtjs/composition-api` and `@nuxtjs/prismic` modules.
+# Nuxt usePrismicAPI
+A handy composable to query data from any Prismic API on your Nuxt application. This composable allows you to query data from any Prismic API and abstracts the process a bit further to make it easy to retreive and display data on your Nuxt application. It works for both SSR and Static Nuxt applications up to v2.15.7 that are using `@nuxtjs/composition-api` and `@nuxtjs/prismic` modules.
 
 ## Installation
 Make sure you have [@nuxtjs/composition-api](https://composition-api.nuxtjs.org) and [@nuxtjs/prismic](https://prismic.nuxtjs.org/installation) modules installed. After that, install this package via npm or Yarn with the following commands.
@@ -20,7 +20,7 @@ yarn add nuxt-use-prismic-api
 Import it at any page or component you want to use like this:
 
 ```js
-import { usePrismicApi } from 'nuxt-use-prismic-api'
+import { usePrismicAPI } from 'nuxt-use-prismic-api'
 ```
 
 ## Usage
@@ -28,7 +28,7 @@ import { usePrismicApi } from 'nuxt-use-prismic-api'
 I tried to make the syntax for queries as simple as possible and also as similar as possible to the original Prismic API references. I'll go over and show examples of for each method below. I highly recommend taking a look at the official [Prismic Documentation](https://prismic.io/docs) for references mentioned below.
 
 ### Query
-The composable exports a function called `usePrismicApi()` and it takes a payload object as a parameter.
+The composable exports a function called `usePrismicAPI()` and it takes a payload object as a parameter.
 
 The payload object may look like this for a given query:
 ```ts
@@ -47,7 +47,7 @@ The payload object may look like this for a given query:
 }
 ```
 
-The `data` property is the dynamic variable that is exported by the `usePrismicApi()` function. Basically, the exported constant can be named by the user. Queries return an array of objects and the value of the data property is used as a prefix for **Pagination**, **Loading** and **Error** objects as well as **RefetchData** function. Let's take look at an example query below.
+The `data` property is the dynamic variable that is exported by the `usePrismicAPI()` function. Basically, the exported constant can be named by the user. Queries return an array of objects and the value of the data property is used as a prefix for **Pagination**, **Loading** and **Error** objects as well as **RefetchData** function. Let's take look at an example query below.
 
 ```js
 const {
@@ -56,7 +56,7 @@ const {
   blogPostsRefetchData,
   blogPostsLoading,
   blogPostsError,
-} = usePrismicApi({
+} = usePrismicAPI({
   data: 'blogPosts',
   method: 'query',
   query: {
@@ -82,7 +82,7 @@ Currently only `at`, `any`, `not` and `in` predicates are supported but I'm work
 This is a very handy method that uses the getByUID helper function which returns a single object of a specified document type with a given UID. It's great for creating a single blog post page. Here is an example getByUID method with this composable.
 
 ```js
-const { singleBlogPost, singleBlogPostLoading, singleBlogPostError } = usePrismicApi({
+const { singleBlogPost, singleBlogPostLoading, singleBlogPostError } = usePrismicAPI({
   data: 'singleBlogPost',
   method: 'getByUID',
   docType: 'blog_post',
