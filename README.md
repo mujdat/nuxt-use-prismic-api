@@ -1,17 +1,17 @@
 # Nuxt usePrismicAPI
-A handy composable to query data from any Prismic API on your Nuxt application. This composable allows you to query data from any Prismic API and abstracts the process a bit further to make it easy to retreive and display data on your Nuxt application. It works for both SSR and Static Nuxt applications up to v2.15.7 that are using `@nuxtjs/composition-api` and `@nuxtjs/prismic` plugins.
+A handy composable to query data from any Prismic API on your Nuxt application. This composable allows you to query data from any Prismic API and abstracts the process a bit further to make it easy to retreive and display data on your Nuxt application. It works for both SSR and Static Nuxt applications up to v2.15.7 that are using [@nuxtjs/composition-api](https://composition-api.nuxtjs.org) and [@nuxtjs/prismic](https://prismic.nuxtjs.org/installation) modules.
+
+---
 
 ## Installation
-Make sure you have [@nuxtjs/composition-api](https://composition-api.nuxtjs.org) and [@nuxtjs/prismic](https://prismic.nuxtjs.org/installation) plugins installed. After that, install this package via npm or Yarn with the following commands.
+Make sure you have [@nuxtjs/composition-api](https://composition-api.nuxtjs.org) and [@nuxtjs/prismic](https://prismic.nuxtjs.org/installation) modules installed. After that, install this package via npm or Yarn with the following commands.
 
 ### npm:
-
 ```bash
 npm i nuxt-use-prismic-api
 ```
 
 ### Yarn:
-
 ```bash
 yarn add nuxt-use-prismic-api
 ```
@@ -23,8 +23,9 @@ Import it at any page or component you want to use like this:
 import { usePrismicAPI } from 'nuxt-use-prismic-api'
 ```
 
-## Usage
+---
 
+## Usage: Fetching Data
 I tried to make the syntax for queries as simple as possible and also as similar as possible to the original Prismic API references. I'll go over and show examples of for each method below. I highly recommend taking a look at the official [Prismic Documentation](https://prismic.io/docs) for references mentioned below.
 
 ### Query
@@ -91,4 +92,27 @@ const { singleBlogPost, singleBlogPostLoading, singleBlogPostError } = usePrismi
 ```
 In this example, there is no query object since our method is `getByUID`. Here, we just need to specify `docType` and the `uid` values. These can also be given dynamically. In fact, for a single blog post page, the `uid` value would most likely come in form of a `param` from the parent page.
 
-Currently only `getByUID` is supported but I'm working on adding `getByID`, `getByIDs` and other helper functions as well.
+### getByID
+
+This method is quite simple, as it only requires a document ID as a parameter.
+
+```js
+const { item, itemLoading, itemError } = usePrismicAPI({
+  data: 'item',
+  method: 'getByID',
+  id: '1b9d6bcdb8dfbbd4bed'
+})
+```
+In this example, there is also no query object since our method is `getByID`. Here, we just need to specify the `id` value and this will return the document with the given `id`.
+
+Currently only `getByUID` and `getByID` are supported but I'm working on adding `getByIDs` and other useful helper functions as well.
+
+---
+
+## Usage: Rendering Data
+
+You can either create your own custom components or you can use some of the powerful components that come with [@nuxtjs/prismic](https://prismic.nuxtjs.org/installation) module. Especially, for rich text fields I recommend using the `prismic-rich-text` component like in the example below. For more information, please refer to the [official documentation](https://prismic.nuxtjs.org/injected-kits) of @nuxtjs/prismic module.
+
+```html
+<prismic-rich-text :field="document.text" />
+```

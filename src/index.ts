@@ -28,7 +28,7 @@ interface ResultObject {
 
 interface PayloadObject {
   data: string
-  method: 'query' | 'getByUID'
+  method: 'query' | 'getByUID' | 'getByID'
   query?: {
     predicates: 'any' | 'at' | 'not'
     path: string
@@ -46,6 +46,8 @@ interface PayloadObject {
   }
   docType?: string
   uid?: string
+  id?: string
+  ids?: string[]
 }
 
 export const usePrismicAPI = (payload: PayloadObject) => {
@@ -164,6 +166,34 @@ export const usePrismicAPI = (payload: PayloadObject) => {
       ...dynamicGetByUIDDataObject.value,
       ...dynamicGetByUIDLoadingStateObject.value,
       ...dynamicGetByUIDErrorStateObject.value
+    }
+  } else if (payload && payload.method === 'getByID') {
+    const dynamicGetByIDDataObject = ref<any>({
+      [`${payload.data}`] : {}
+    })
+    const dynamicGetByIDLoadingStateObject = ref<any>({
+      [`${payload.data}Loading`] : {}
+    })
+    const dynamicGetByIDErrorStateObject = ref<any>({
+      [`${payload.data}Error`] : {}
+    })
+    useFetch(async () => {
+      try {
+        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(true)
+        const response = await $prismic.api.getByID(payload.id)
+        if (response) {
+          dynamicGetByIDDataObject.value[`${payload.data}`].data = response
+        }
+        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
+      } catch (error: any) {
+        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
+        dynamicGetByIDErrorStateObject.value[`${payload.data}Error`].status = error.status
+      }
+    })
+    return {
+      ...dynamicGetByIDDataObject.value,
+      ...dynamicGetByIDLoadingStateObject.value,
+      ...dynamicGetByIDErrorStateObject.value
     }
   }
 }
