@@ -55,18 +55,20 @@ export const usePrismicAPI = (payload: PayloadObject) => {
 
   if (payload && payload.method === 'query') {
     const dynamicQueryDataObject = ref<any>({
-      [`${payload.data}`] : []
+      [`${payload.data}`]: [],
     })
     const dynamicQueryPaginationObject = ref<any>({
-      [`${payload.data}Pagination`] : {}
+      [`${payload.data}Pagination`]: {},
     })
     const dynamicQueryLoadingStateObject = ref<any>({
-      [`${payload.data}Loading`] : {}
+      [`${payload.data}Loading`]: {},
     })
     const dynamicQueryErrorStateObject = ref<any>({
-      [`${payload.data}Error`] : {}
+      [`${payload.data}Error`]: {},
     })
-    const generatePaginationObjectFromResponse = (response: ResponsePaginationObject) => {
+    const generatePaginationObjectFromResponse = (
+      response: ResponsePaginationObject
+    ) => {
       return {
         page: response.page,
         results_per_page: response.results_per_page,
@@ -74,126 +76,185 @@ export const usePrismicAPI = (payload: PayloadObject) => {
         total_results_size: response.total_results_size,
         total_pages: response.total_pages,
         next_page: response.next_page,
-        prev_page: response.prev_page
+        prev_page: response.prev_page,
       }
     }
     const getPredicatesQuery = (predicates: string | undefined) => {
       if (predicates && predicates === 'at') {
-        return $prismic.api.query($prismic.predicates.at(`${payload?.query?.path}`, payload?.query?.queryValue), payload?.query?.options)
+        return $prismic.api.query(
+          $prismic.predicates.at(
+            `${payload?.query?.path}`,
+            payload?.query?.queryValue
+          ),
+          payload?.query?.options
+        )
       } else if (predicates && predicates === 'any') {
-        return $prismic.api.query($prismic.predicates.any(`${payload?.query?.path}`, payload?.query?.queryValue), payload?.query?.options)
+        return $prismic.api.query(
+          $prismic.predicates.any(
+            `${payload?.query?.path}`,
+            payload?.query?.queryValue
+          ),
+          payload?.query?.options
+        )
       } else if (predicates && predicates === 'not') {
-        return $prismic.api.query($prismic.predicates.not(`${payload?.query?.path}`, payload?.query?.queryValue), payload?.query?.options)
+        return $prismic.api.query(
+          $prismic.predicates.not(
+            `${payload?.query?.path}`,
+            payload?.query?.queryValue
+          ),
+          payload?.query?.options
+        )
       } else if (predicates && predicates === 'in') {
-        return $prismic.api.query($prismic.predicates.in(`${payload?.query?.path}`, payload?.query?.queryValue), payload?.query?.options)
+        return $prismic.api.query(
+          $prismic.predicates.in(
+            `${payload?.query?.path}`,
+            payload?.query?.queryValue
+          ),
+          payload?.query?.options
+        )
       }
     }
     useFetch(async () => {
       try {
-      dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(true)
-      const response = await getPredicatesQuery(payload.query?.predicates)
+        dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state =
+          ref<Boolean>(true)
+        const response = await getPredicatesQuery(payload.query?.predicates)
         if (response) {
-          dynamicQueryPaginationObject.value[`${payload.data}Pagination`].data = {...generatePaginationObjectFromResponse(response)}
-          if(response.results && response.results.length) {
+          dynamicQueryPaginationObject.value[`${payload.data}Pagination`].data =
+            { ...generatePaginationObjectFromResponse(response) }
+          if (response.results && response.results.length) {
             response.results.forEach((result: ResultObject) => {
-            dynamicQueryDataObject.value[`${payload.data}`].push(result)
+              dynamicQueryDataObject.value[`${payload.data}`].push(result)
             })
           }
         }
-      dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
+        dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state =
+          ref<Boolean>(false)
       } catch (error: any) {
-        dynamicQueryErrorStateObject.value[`${payload.data}Error`].status = error.status
-        dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
+        dynamicQueryErrorStateObject.value[`${payload.data}Error`].status =
+          error.status
+        dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state =
+          ref<Boolean>(false)
       }
     })
     const refetchDataFunctionObject = ref<any>({
       [`${payload.data}RefetchData`]: (url: string) => {
         try {
-          dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(true)
+          dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state =
+            ref<Boolean>(true)
           if (url) {
             fetch(url)
-            .then((response) => response.json())
-            .then((data) => {
-              if (data) {
-                dynamicQueryDataObject.value[`${payload.data}`].splice(0, dynamicQueryDataObject.value[`${payload.data}`].length)
-                data.results.forEach((result: ResultObject) => {
-                  dynamicQueryDataObject.value[`${payload.data}`].push(result)
-                })
-                dynamicQueryPaginationObject.value[`${payload.data}Pagination`].data = {}
-                dynamicQueryPaginationObject.value[`${payload.data}Pagination`].data = {...generatePaginationObjectFromResponse(data)}
-              }
-            })
-            dynamicQueryLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
+              .then((response) => response.json())
+              .then((data) => {
+                if (data) {
+                  dynamicQueryDataObject.value[`${payload.data}`].splice(
+                    0,
+                    dynamicQueryDataObject.value[`${payload.data}`].length
+                  )
+                  data.results.forEach((result: ResultObject) => {
+                    dynamicQueryDataObject.value[`${payload.data}`].push(result)
+                  })
+                  dynamicQueryPaginationObject.value[
+                    `${payload.data}Pagination`
+                  ].data = {}
+                  dynamicQueryPaginationObject.value[
+                    `${payload.data}Pagination`
+                  ].data = { ...generatePaginationObjectFromResponse(data) }
+                }
+              })
+            dynamicQueryLoadingStateObject.value[
+              `${payload.data}Loading`
+            ].state = ref<Boolean>(false)
           } else {
             return null
           }
         } catch (error: any) {
-          dynamicQueryErrorStateObject.value[`${payload.data}Error`].status = error.status
+          dynamicQueryErrorStateObject.value[`${payload.data}Error`].status =
+            error.status
         }
-      }
+      },
     })
     return {
       ...dynamicQueryDataObject.value,
       ...dynamicQueryPaginationObject.value,
       ...refetchDataFunctionObject.value,
       ...dynamicQueryLoadingStateObject.value,
-      ...dynamicQueryErrorStateObject.value
+      ...dynamicQueryErrorStateObject.value,
     }
   } else if (payload && payload.method === 'getByUID') {
     const dynamicGetByUIDDataObject = ref<any>({
-      [`${payload.data}`] : {}
+      [`${payload.data}`]: [],
     })
     const dynamicGetByUIDLoadingStateObject = ref<any>({
-      [`${payload.data}Loading`] : {}
+      [`${payload.data}Loading`]: [],
     })
     const dynamicGetByUIDErrorStateObject = ref<any>({
-      [`${payload.data}Error`] : {}
+      [`${payload.data}Error`]: [],
     })
     useFetch(async () => {
       try {
-        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(true)
-        const response = await $prismic.api.getByUID(payload.docType, payload.uid)
+        dynamicGetByUIDLoadingStateObject.value[
+          `${payload.data}Loading`
+        ].state = ref<Boolean>(true)
+        const response = await $prismic.api.getByUID(
+          payload.docType,
+          payload.uid
+        )
         if (response) {
-          dynamicGetByUIDDataObject.value[`${payload.data}`].data = response
+          dynamicGetByUIDDataObject.value[`${payload.data}`].push(response)
         }
-        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
+        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].push(
+          false
+        )
+        dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].push(
+          false
+        )
       } catch (error: any) {
-        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
-        dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].status = error.status
+        dynamicGetByUIDLoadingStateObject.value[
+          `${payload.data}Loading`
+        ].state = ref<Boolean>(false)
+        dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].status =
+          error.status
       }
     })
     return {
       ...dynamicGetByUIDDataObject.value,
       ...dynamicGetByUIDLoadingStateObject.value,
-      ...dynamicGetByUIDErrorStateObject.value
+      ...dynamicGetByUIDErrorStateObject.value,
     }
   } else if (payload && payload.method === 'getByID') {
     const dynamicGetByIDDataObject = ref<any>({
-      [`${payload.data}`] : {}
+      [`${payload.data}`]: {},
     })
     const dynamicGetByIDLoadingStateObject = ref<any>({
-      [`${payload.data}Loading`] : {}
+      [`${payload.data}Loading`]: {},
     })
     const dynamicGetByIDErrorStateObject = ref<any>({
-      [`${payload.data}Error`] : {}
+      [`${payload.data}Error`]: {},
     })
     useFetch(async () => {
       try {
-        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(true)
+        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].state =
+          ref<Boolean>(true)
         const response = await $prismic.api.getByID(payload.id)
         if (response) {
-          dynamicGetByIDDataObject.value[`${payload.data}`].data = response
+          dynamicGetByIDDataObject.value[`${payload.data}`].push(response)
         }
-        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
+        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].push(
+          false
+        )
       } catch (error: any) {
-        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].state = ref<Boolean>(false)
-        dynamicGetByIDErrorStateObject.value[`${payload.data}Error`].status = error.status
+        dynamicGetByIDLoadingStateObject.value[
+          `${payload.data}Loading`
+        ].state.push(false)
+        dynamicGetByIDErrorStateObject.value[`${payload.data}Error`].status =
+          error.status
       }
     })
     return {
       ...dynamicGetByIDDataObject.value,
       ...dynamicGetByIDLoadingStateObject.value,
-      ...dynamicGetByIDErrorStateObject.value
+      ...dynamicGetByIDErrorStateObject.value,
     }
   }
 }
