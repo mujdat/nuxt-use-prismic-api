@@ -1,8 +1,6 @@
 # Nuxt usePrismicAPI
 A handy composable to query data from any Prismic API on your Nuxt application. This composable allows you to query data from any Prismic API and abstracts the process a bit further to make it easy to retreive and display data on your Nuxt application. It works for both SSR and Static Nuxt applications up to v2.15.7 that are using [@nuxtjs/composition-api](https://composition-api.nuxtjs.org) and [@nuxtjs/prismic](https://prismic.nuxtjs.org/installation) modules.
 
----
-
 ## Installation
 Make sure you have [@nuxtjs/composition-api](https://composition-api.nuxtjs.org) and [@nuxtjs/prismic](https://prismic.nuxtjs.org/installation) modules installed. After that, install this package via npm or Yarn with the following commands.
 
@@ -22,8 +20,6 @@ Import it at any page or component you want to use like this:
 ```js
 import { usePrismicAPI } from 'nuxt-use-prismic-api'
 ```
-
----
 
 ## Usage: Fetching Data
 I tried to make the syntax for queries as simple as possible and also as similar as possible to the original Prismic API references. I'll go over and show examples of for each method below. I highly recommend taking a look at the official [Prismic Documentation](https://prismic.io/docs) for references mentioned below.
@@ -106,8 +102,6 @@ const { item, itemLoading, itemError } = usePrismicAPI({
 In this example, there is also no query object since our method is `getByID`. Here, we just need to specify the `id` value and this will return the document with the given `id`.
 
 Currently only `getByUID` and `getByID` are supported but I'm working on adding `getByIDs` and other useful helper functions as well.
-
----
 
 ## Usage: Rendering Data
 
