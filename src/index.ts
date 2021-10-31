@@ -193,8 +193,13 @@ export const usePrismicAPI = (payload: PayloadObject) => {
     })
     useFetch(async () => {
       try {
-        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].push(
-          true
+        dynamicGetByUIDLoadingStateObject.value[
+          `${payload.data}Loading`
+        ].splice(0, 0, true)
+        dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].splice(
+          0,
+          1,
+          false
         )
         const response = await $prismic.api.getByUID(
           payload.docType,
@@ -202,19 +207,23 @@ export const usePrismicAPI = (payload: PayloadObject) => {
         )
         if (response) {
           dynamicGetByUIDDataObject.value[`${payload.data}`].push(response)
+          dynamicGetByUIDLoadingStateObject.value[
+            `${payload.data}Loading`
+          ].splice(0, 1, false)
+          dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].splice(
+            0,
+            1,
+            false
+          )
         }
-        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].push(
-          false
-        )
-        dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].push(
-          false
-        )
       } catch (error: any) {
-        dynamicGetByUIDLoadingStateObject.value[`${payload.data}Loading`].push(
-          false
-        )
-        dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].push(
-          error.status
+        dynamicGetByUIDLoadingStateObject.value[
+          `${payload.data}Loading`
+        ].splice(0, 1, false)
+        dynamicGetByUIDErrorStateObject.value[`${payload.data}Error`].splice(
+          0,
+          1,
+          true
         )
       }
     })
@@ -235,22 +244,33 @@ export const usePrismicAPI = (payload: PayloadObject) => {
     })
     useFetch(async () => {
       try {
-        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].push(
+        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].splice(
+          0,
+          0,
           true
+        )
+        dynamicGetByIDErrorStateObject.value[`${payload.data}Error`].splice(
+          0,
+          0,
+          false
         )
         const response = await $prismic.api.getByID(payload.id)
         if (response) {
           dynamicGetByIDDataObject.value[`${payload.data}`].push(response)
+          dynamicGetByIDLoadingStateObject.value[
+            `${payload.data}Loading`
+          ].splice(0, 1, false)
         }
-        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].push(
-          false
-        )
       } catch (error: any) {
-        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].push(
+        dynamicGetByIDLoadingStateObject.value[`${payload.data}Loading`].splice(
+          0,
+          1,
           false
         )
-        dynamicGetByIDErrorStateObject.value[`${payload.data}Error`].push(
-          error.status
+        dynamicGetByIDErrorStateObject.value[`${payload.data}Error`].splice(
+          0,
+          1,
+          true
         )
       }
     })
